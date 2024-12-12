@@ -1,4 +1,4 @@
-name: PocketMine-MP post-release
+name: XPocketMP post-release
 
 on:
   repository_dispatch:
@@ -17,19 +17,19 @@ jobs:
         id: token
         uses: actions/create-github-app-token@v1
         with:
-          app-id: ${{ vars.RESTRICTED_ACTIONS_APP_ID }}
-          private-key: ${{ secrets.RESTRICTED_ACTIONS_APP_KEY }}
+          app-id: ${{ secrets.APP_ID }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
           owner: ${{ github.repository_owner }}
-          repositories: PocketMine-MP
+          repositories: XPocketMP
 
-      - name: Checkout PocketMine-MP
+      - name: Checkout XPocketMP 
         uses: actions/checkout@v4
         with:
-          repository: ${{ github.repository_owner }}/PocketMine-MP # to allow testing on forks without editing the workflow
+          repository: ${{ github.repository_owner }}/XPocketMP # to allow testing on forks without editing the workflow
           fetch-depth: 0
           token: ${{ steps.token.outputs.token }}
           ref: ${{ github.event.client_payload.branch }}
-          path: ${{ github.workspace }}/pocketmine-mp
+          path: ${{ github.workspace }}/xpocketmp
 
       - name: Get GitHub App User ID
         id: get-user-id
@@ -38,17 +38,17 @@ jobs:
           GH_TOKEN: ${{ steps.token.outputs.token }}
   
       - name: Set Git config
-        working-directory: ${{ github.workspace }}/pocketmine-mp
+        working-directory: ${{ github.workspace }}/xpocketmp
         run: |
           git config user.name '${{ steps.token.outputs.app-slug }}[bot]'
           git config user.email '${{ steps.get-user-id.outputs.user-id }}+${{ steps.token.outputs.app-slug }}[bot]@users.noreply.github.com'
 
       - name: Run version bump script
-        working-directory: ${{ github.workspace }}/pocketmine-mp
+        working-directory: ${{ github.workspace }}/xpocketmp
         run: |
           "${{ github.workspace }}/.github/workflows/bump-version-post-release.sh" ./ "Commit created by: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
 
       - name: Push changes
-        working-directory: ${{ github.workspace }}/pocketmine-mp
+        working-directory: ${{ github.workspace }}/xpocketmp
         run: git push
 
