@@ -1,7 +1,7 @@
 name: XPocketMP post-release
 
 on:
-  workflow_run:
+  workflow_dispatch:
   repository_dispatch:
     types: pocketmine_mp_post_release
 
