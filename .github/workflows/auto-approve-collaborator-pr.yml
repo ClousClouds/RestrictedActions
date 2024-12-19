@@ -1,6 +1,7 @@
 name: Auto approve collaborator PRs
 
 on:
+  workflow_dispatch:
   repository_dispatch:
     types: auto_approve_collaborator_pr
 
